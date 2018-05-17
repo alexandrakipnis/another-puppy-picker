@@ -13,3 +13,7 @@ main {
     margin-bottom: 0.75rem;
 
 }
+
+.template {
+    display: none;
+}

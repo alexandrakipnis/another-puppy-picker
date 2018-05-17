@@ -3,6 +3,7 @@ const app = {
       this.puppies = []
       this.max = 0
       this.list = document.querySelector(selectors.listSelector)
+      this.template = document.querySelector(selectors.templateSelector)
   
       document
         .querySelector(selectors.formSelector)
@@ -13,9 +14,12 @@ const app = {
     },
   
     renderListItem: function(puppy) {
-      const item = document.createElement('li')
+      const item = this.template.cloneNode(true)
+      item.classList.remove('template')
       item.dataset.id = puppy.id
-      item.textContent = puppy.name
+      item 
+        .querySelector('.puppyName')
+        .textContent = puppy.name
       return item
     },
   
@@ -38,4 +42,5 @@ const app = {
   app.init({
     formSelector: '#puppyForm',
     listSelector: '#puppyList',
+    templateSelector: '.puppy.template',
   })
