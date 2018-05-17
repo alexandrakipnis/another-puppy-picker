@@ -14,7 +14,7 @@ const app = {
   
     renderListItem: function(puppy) {
       const item = document.createElement('li')
-      item.dataset.id = flick.id
+      item.dataset.id = puppy.id
       item.textContent = puppy.name
       return item
     },
@@ -26,10 +26,10 @@ const app = {
         name: f.puppyName.value,
       }
 
-      this.puppies.push(puppy)
+      this.puppies.unshift(puppy)
   
       const item = this.renderListItem(puppy)
-      this.list.appendChild(item)
+      this.list.insertBefore(item, this.list.firstElementChild)
   
       f.reset()
     },
