@@ -1,7 +1,7 @@
 main {
     width: 80%;
     margin: 1rem auto;
-    background-color: antiquewhite;
+    background-color: white;
 }
 
 .puppyName{
@@ -11,9 +11,19 @@ main {
 .button{
     margin: 0 0.5rem;
     margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
 
 }
 
 .template {
     display: none;
+}
+
+.puppy.fav {
+    background-color: lightseagreen;
+    border-color: lightseagreen;
+}
+
+.header {
+    text-align: center;
 }

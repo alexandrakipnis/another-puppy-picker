@@ -11,16 +11,9 @@ const app = {
           ev.preventDefault()
           this.handleSubmit(ev)
         })
-      document
-        .querySelector(selectors.listSelector)
-        .addEventListener('click', ev => {
-            ev.preventDefault()
-            //this.removeElements(ev)
-            //come back to this line below
-            this.removePuppies(this, ev)
-        })
+
     },
-  
+
     renderListItem: function(puppy) {
       const item = this.template.cloneNode(true)
       item.classList.remove('template')
@@ -28,6 +21,26 @@ const app = {
       item 
         .querySelector('.puppyName')
         .textContent = puppy.name
+
+      item
+        .querySelector('.alert')
+        .addEventListener('click', ev => { 
+            ev.preventDefault()
+            this.removePuppies(this, ev)
+        })
+
+    
+      if (puppy.fav) {
+            item.classList.add('fav')
+      }
+
+      item
+        .querySelector('.warning')
+        .addEventListener('click', ev => { 
+            ev.preventDefault()
+            this.favoritePuppy(this, ev)
+            puppy.fav = !puppy.fav
+        })
       return item
     },
   
@@ -36,6 +49,7 @@ const app = {
       const puppy = {
         id: ++this.max,
         name: f.puppyName.value,
+        fav: false,
       }
 
       this.puppies.unshift(puppy)
@@ -46,16 +60,6 @@ const app = {
       f.reset()
     },
 
-    removeElements: function(puppyArray){
-        puppyArray.map(element => {
-            const parent = element.parentNode
-            while(element.firstChild){
-                parent.insertBefore(element.firstChild, element)
-            }
-            element.remove()
-        })
-
-    },
 
     removePuppies: function(puppy, ev){
         const listItem = ev.target.closest('.puppy')
@@ -69,6 +73,21 @@ const app = {
         }
         listItem.remove()
     },
+
+    favoritePuppy: function(puppy, ev){
+        const listItem = ev.target.closest('.puppy')
+        puppy.fav = !puppy.fav
+        if (puppy.fav) {
+            listItem.classList.add('fav')
+            //puppy.fav = true
+        } else {
+            listItem.classList.remove('fav')
+            //puppy.fav = false
+        }
+
+
+    },
+
   }
   
   app.init({
