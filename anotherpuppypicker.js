@@ -14,6 +14,7 @@ const app = {
   
     renderListItem: function(puppy) {
       const item = document.createElement('li')
+      item.dataset.id = flick.id
       item.textContent = puppy.name
       return item
     },
