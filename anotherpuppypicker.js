@@ -11,6 +11,14 @@ const app = {
           ev.preventDefault()
           this.handleSubmit(ev)
         })
+      document
+        .querySelector(selectors.listSelector)
+        .addEventListener('click', ev => {
+            ev.preventDefault()
+            //this.removeElements(ev)
+            //come back to this line below
+            this.removePuppies(this, ev)
+        })
     },
   
     renderListItem: function(puppy) {
@@ -36,6 +44,30 @@ const app = {
       this.list.insertBefore(item, this.list.firstElementChild)
   
       f.reset()
+    },
+
+    removeElements: function(puppyArray){
+        puppyArray.map(element => {
+            const parent = element.parentNode
+            while(element.firstChild){
+                parent.insertBefore(element.firstChild, element)
+            }
+            element.remove()
+        })
+
+    },
+
+    removePuppies: function(puppy, ev){
+        const listItem = ev.target.closest('.puppy')
+        const puppyArray = this.puppies
+        for(var i = 0; i < puppyArray.length; i++){
+            const current = puppyArray[i].id.toString()
+            if(listItem.dataset.id === current){
+                puppyArray.splice(i, 1)
+                break
+            }
+        }
+        listItem.remove()
     },
   }
   
