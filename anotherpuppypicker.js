@@ -1,5 +1,6 @@
 const app = {
     init: function(selectors) {
+      this.puppies = []
       this.max = 0
       this.list = document.querySelector(selectors.listSelector)
   
@@ -23,6 +24,8 @@ const app = {
         id: ++this.max,
         name: f.puppyName.value,
       }
+
+      this.puppies.push(puppy)
   
       const item = this.renderListItem(puppy)
       this.list.appendChild(item)
