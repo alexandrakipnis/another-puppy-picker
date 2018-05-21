@@ -1,5 +1,5 @@
-const app = {
-    init: function(selectors) {
+class App {
+    constructor(selectors) {
       this.puppies = []
       this.max = 0
       this.list = document.querySelector(selectors.listSelector)
@@ -12,9 +12,9 @@ const app = {
           this.handleSubmit(ev)
         })
 
-    },
+    }
 
-    renderListItem: function(puppy) {
+    renderListItem(puppy) {
       const item = this.template.cloneNode(true)
       item.classList.remove('template')
       item.dataset.id = puppy.id
@@ -23,28 +23,30 @@ const app = {
         .textContent = puppy.name
 
       item
-        .querySelector('.alert')
-        .addEventListener('click', ev => { 
-            ev.preventDefault()
-            this.removePuppies(this, ev)
-        })
-
-    
-      if (puppy.fav) {
-            item.classList.add('fav')
-      }
+        .querySelector('.remove.button')
+        .addEventListener('click', this.removePuppy.bind(this, puppy))
 
       item
-        .querySelector('.warning')
-        .addEventListener('click', ev => { 
-            ev.preventDefault()
-            this.favoritePuppy(this, ev)
-            puppy.fav = !puppy.fav
-        })
+        .querySelector('.fav.button')
+        .addEventListener('click', this.favoritePuppy.bind(this, puppy))
+
+      item
+        .querySelector('.edit.button')
+        .addEventListener('click', this.toggleEditable.bind(this, puppy))
+
+      item 
+        .querySelector('.up.button')
+        .addEventListener('click', this.moveUp.bind(this.puppy))
+
+      item 
+        .querySelector('.down.button')
+        .addEventListener('click', this.moveDown.bind(this.puppy))
+
       return item
-    },
+
+    }
   
-    handleSubmit: function(ev) {
+    handleSubmit(ev) {
       const f = ev.target
       const puppy = {
         id: ++this.max,
@@ -58,39 +60,76 @@ const app = {
       this.list.insertBefore(item, this.list.firstElementChild)
   
       f.reset()
-    },
+    }
 
 
-    removePuppies: function(puppy, ev){
+    removePuppy(puppy, ev){
+        const listItem = ev.target.closest('.puppy')
+        const i = this.puppies.indexOf(puppy)
+        this.puppies.splice(i, 1)
+        listItem.remove() 
+    }
+
+    favoritePuppy(puppy, ev){
+        const listItem = ev.target.closest('.puppy')
+        puppy.fav = listItem.classList.toggle('fav')
+    }
+
+    toggleEditable(puppy, ev){
+        const btn = ev.target
+        const listItem = btn.closest('.puppy')
+        const nameField = listItem.querySelector('.puppyName')
+
+        if (nameField.isContentEditable){
+            nameField.contentEditable = false
+            btn.textContent = "Edit"
+            btn.classList.remove('success')
+
+            puppy.name = nameField.textContent
+
+        } else {
+            nameField.contentEditable = true
+            nameField.focus()
+            btn.textContent = "Save"
+            btn.classList.add('success')
+        }  
+    }
+
+    moveUp(puppy, ev){
         const listItem = ev.target.closest('.puppy')
         const puppyArray = this.puppies
-        for(var i = 0; i < puppyArray.length; i++){
-            const current = puppyArray[i].id.toString()
-            if(listItem.dataset.id === current){
-                puppyArray.splice(i, 1)
-                break
-            }
-        }
-        listItem.remove()
-    },
 
-    favoritePuppy: function(puppy, ev){
+        const index = puppyArray.findIndex((currentPuppy, i) =>{
+            return currentPuppy.id === puppy.id
+        })
+
+        if(index > 0){
+            this.list.insertBefore(listItem, listItem.previousElementSibling)
+            const temp = puppyArray[index - 1]
+            puppyArray[index - 1] = puppy
+            puppyArray[index] = temp
+        }
+    }
+
+    moveDown(puppy, ev){
         const listItem = ev.target.closest('.puppy')
-        puppy.fav = !puppy.fav
-        if (puppy.fav) {
-            listItem.classList.add('fav')
-            //puppy.fav = true
-        } else {
-            listItem.classList.remove('fav')
-            //puppy.fav = false
+        const puppyArray = this.puppies
+
+        const index = puppyArray.findIndex((currentPuppy, i) =>{
+            return currentPuppy.id === puppy.id
+        })
+
+        if(index < puppyArray.length - 1){
+            this.list.insertBefore(listItem, listItem.nextElementSibling)
+            const temp = puppyArray[index + 1]
+            puppyArray[index + 1] = puppy
+            puppyArray[index] = temp
         }
-
-
-    },
+    }
 
   }
   
-  app.init({
+  const app = new App({
     formSelector: '#puppyForm',
     listSelector: '#puppyList',
     templateSelector: '.puppy.template',
