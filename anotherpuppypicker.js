@@ -18,9 +18,10 @@ class App {
       const item = this.template.cloneNode(true)
       item.classList.remove('template')
       item.dataset.id = puppy.id
-      item 
-        .querySelector('.puppyName')
-        .textContent = puppy.name
+
+      const nameSpan = item .querySelector('.puppyName')
+      nameSpan.textContent = puppy.name
+      nameSpan.addEventListener('keypress', this.saveOnEnter.bind(this, puppy))
 
       item
         .querySelector('.remove.button')
@@ -76,9 +77,9 @@ class App {
     }
 
     toggleEditable(puppy, ev){
-        const btn = ev.target
-        const listItem = btn.closest('.puppy')
+        const listItem = ev.target.closest('.puppy')
         const nameField = listItem.querySelector('.puppyName')
+        const btn = listItem.querySelector('.edit.button')
 
         if (nameField.isContentEditable){
             nameField.contentEditable = false
@@ -93,6 +94,12 @@ class App {
             btn.textContent = "Save"
             btn.classList.add('success')
         }  
+    }
+
+    saveOnEnter(puppy, ev){
+        if(ev.key === 'Enter'){
+            this.toggleEditable(puppy, ev)
+        }
     }
 
     moveUp(puppy, ev){
