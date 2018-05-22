@@ -36,12 +36,12 @@ class App {
         .addEventListener('click', this.toggleEditable.bind(this, puppy))
 
       item 
-        .querySelector('.up.button')
-        .addEventListener('click', this.moveUp.bind(this.puppy))
+        .querySelector('button.move-up')
+        .addEventListener('click', this.moveUp.bind(this, puppy, item))
 
       item 
-        .querySelector('.down.button')
-        .addEventListener('click', this.moveDown.bind(this.puppy))
+        .querySelector('button.move-down')
+        .addEventListener('click', this.moveDown.bind(this, puppy, item))
 
       return item
 
@@ -102,39 +102,27 @@ class App {
         }
     }
 
-    moveUp(puppy, ev){
-        const listItem = ev.target.closest('.puppy')
-        const puppyArray = this.puppies
-
-        const index = puppyArray.findIndex((currentPuppy, i) =>{
-            return currentPuppy.id === puppy.id
-        })
-
-        if(index > 0){
-            this.list.insertBefore(listItem, listItem.previousElementSibling)
-            const temp = puppyArray[index - 1]
-            puppyArray[index - 1] = puppy
-            puppyArray[index] = temp
+    moveDown(puppy, item) {
+        const i = this.puppies.indexOf(puppy)
+    
+        if (i < this.puppies.length - 1) {
+          this.moveUp(this.puppies[i + 1], item.nextElementSibling)
         }
-    }
-
-    moveDown(puppy, ev){
-        const listItem = ev.target.closest('.puppy')
-        const puppyArray = this.puppies
-
-        const index = puppyArray.findIndex((currentPuppy, i) =>{
-            return currentPuppy.id === puppy.id
-        })
-
-        if(index < puppyArray.length - 1){
-            this.list.insertBefore(listItem, listItem.nextElementSibling)
-            const temp = puppyArray[index + 1]
-            puppyArray[index + 1] = puppy
-            puppyArray[index] = temp
+      }
+    
+      moveUp(puppy, item) {
+        const i = this.puppies.indexOf(puppy)
+    
+        if (i > 0) {
+          this.list.insertBefore(item, item.previousElementSibling)
+    
+          const previousPuppy = this.puppies[i - 1]
+          this.puppies[i - 1] = puppy
+          this.puppies[i] = previousPuppy
         }
-    }
+      }
 
-  }
+}
   
   const app = new App({
     formSelector: '#puppyForm',
